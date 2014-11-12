@@ -2,7 +2,7 @@
 // @name       scribd.com get all piano sheets
 // @namespace  http://use.i.E.your.homepage/
 // @version    0.1
-// @description  enter something useful
+// @description  This does not really work any more..
 // @match      *scribd.com/doc/*
 // @copyright  2012+, You
 // ==/UserScript==
