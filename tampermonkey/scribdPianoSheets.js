@@ -8,6 +8,7 @@
 // ==/UserScript==
 
 (function(){
+  console.log("scripts are being transformed..");
   $("body").prepend($("<input type='button' id='mybutton' style='z-index: 9999; position: absolute; left: 100px; top:30px;' value='Do the Flori magic!'/>"))
   var button = document.getElementById("mybutton");
   button.addEventListener('click',showsheets,true);
