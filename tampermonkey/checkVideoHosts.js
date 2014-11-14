@@ -50,7 +50,8 @@
     "novamov", 
     "filebox",
     "zalaa",
-    "dishonline"
+    "dishonline",
+    "HD Streams"
   ];
 
 
@@ -190,7 +191,7 @@
 
   function openInPopups(hosts){
     for(i=0; i < hosts.length; i++){
-      window.open(decodeURIComponent(getURLFromHost(hosts[i]).replace(/\+/g, '%20')),'open'+i,'width=600,height=600,top=0,left=' + i + '00');
+      window.open(decodeURIComponent(getURLFromHost(hosts[i]).replace(/\+/g, '%20')),'open'+i,'width=600,height=600,top=0,left=' + i + '50');
     }
     markAllAsChecked(hosts);
     // window.open(decodeURIComponent(url.replace(/\+/g, '%20')),'open','width=200,height=60,menubar=no,status=no,location=no,toolbar=no,scrollbars=yes,resizable=yes');
@@ -198,23 +199,31 @@
 
   function insertOpenBar(){
     var bar = document.createElement('div');
-    bar.innerHTML = '<input id="mySearchBar" type="text"></input><button id="myButton">Popups!</button>'; 
+    bar.innerHTML = '<input id="mySearchBar" type="text"></input><button id="myButton1">1</button><button id="myButton3">3</button><button id="myButton5">5</button>'; 
     document.querySelector('*[class^="src_main"]').parentNode.insertBefore(bar, document.querySelector('*[class^="src_main"]'));
     
-    document.getElementById("myButton").addEventListener('click', function(){
-      showAllPopUpsForHostName(document.getElementById("mySearchBar").value);
+    document.getElementById("myButton1").addEventListener('click', function(){
+      showPopUpsForHostName(document.getElementById("mySearchBar").value, 1);
+    }, true);
+
+    document.getElementById("myButton3").addEventListener('click', function(){
+      showPopUpsForHostName(document.getElementById("mySearchBar").value, 3);
+    }, true);
+
+    document.getElementById("myButton5").addEventListener('click', function(){
+      showPopUpsForHostName(document.getElementById("mySearchBar").value, 5);
     }, true);
 
     document.getElementById("mySearchBar").addEventListener('keydown', function(e){
       if(e.keyCode == 13)
-        showAllPopUpsForHostName(document.getElementById("mySearchBar").value);
+        showPopUpsForHostName(document.getElementById("mySearchBar").value);
     }, true);
   }
 
-  function showAllPopUpsForHostName(hostName){
+  function showPopUpsForHostName(hostName, nr){
     var filtered = filterByHostName(sortedHostList, hostName);
     var toPopUp = [];
-    for (i = 0; i < 3; i++) {
+    for (i = 0; i < nr; i++) {
       if(filtered.length > 0) {
         toPopUp.push(sortedHostList.splice(sortedHostList.indexOf(filtered.shift()), 1));
       }
