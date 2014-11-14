@@ -71,7 +71,7 @@
       if(deathMessages instanceof Array)
         msgs = deathMessages;
       else
-        msgs.push(deathMessages)P;
+        msgs.push(deathMessages);
 
       if(containsAny(elString, msgs)){
           colorAllRed();
