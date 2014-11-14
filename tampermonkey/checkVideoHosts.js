@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name       Check Video-Hosts
 // @namespace  http://use.i.E.your.homepage/
-// @version    0.4
+// @version    0.5
 // @description  Only For Me =)
 // @match      http://www.iwatchtwoandahalfmen.com/*
 // @copyright  2012+, You
@@ -191,7 +191,7 @@
 
   function openInPopups(hosts){
     for(i=0; i < hosts.length; i++){
-      window.open(decodeURIComponent(getURLFromHost(hosts[i]).replace(/\+/g, '%20')),'open'+i,'width=600,height=600,top=0,left=' + i + '50');
+      window.open(decodeURIComponent(getURLFromHost(hosts[i]).replace(/\+/g, '%20')),'popup'+i,'width=600,height=600,top=0,left=' + i * 200);
     }
     markAllAsChecked(hosts);
     // window.open(decodeURIComponent(url.replace(/\+/g, '%20')),'open','width=200,height=60,menubar=no,status=no,location=no,toolbar=no,scrollbars=yes,resizable=yes');
