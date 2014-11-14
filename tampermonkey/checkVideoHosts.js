@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name       Check Video-Hosts
 // @namespace  http://use.i.E.your.homepage/
-// @version    0.3
+// @version    0.4
 // @description  Only For Me =)
 // @match      http://www.iwatchtwoandahalfmen.com/*
 // @copyright  2012+, You
