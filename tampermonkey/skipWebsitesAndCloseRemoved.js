@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name       Skip Websites & Close removed
 // @namespace  http://use.i.E.your.homepage/
-// @version    0.1
+// @version    0.2
 // @description  enter something useful
 // @match      daclips.in/vid/*
 // @match      filenuke.com/*
