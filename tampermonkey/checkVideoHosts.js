@@ -199,7 +199,11 @@
 
   function insertOpenBar(){
     var bar = document.createElement('div');
-    bar.innerHTML = '<input id="mySearchBar" type="text"></input><button id="myButton1">1</button><button id="myButton3">3</button><button id="myButton5">5</button>'; 
+    bar.innerHTML = 
+      '<input id="mySearchBar" type="text"></input>' + 
+      '<input type="button" id="myButton1" value="1" />' + 
+      '<input type="button" id="myButton3" value="3" />' + 
+      '<input type="button" id="myButton5" value="5" />'
     document.querySelector('*[class^="src_main"]').parentNode.insertBefore(bar, document.querySelector('*[class^="src_main"]'));
     
     document.getElementById("myButton1").addEventListener('click', function(){
