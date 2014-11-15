@@ -4,6 +4,7 @@
 // @version    0.5
 // @description  Only For Me =)
 // @match      http://www.iwatchtwoandahalfmen.com/*
+// @run-at document-end
 // @copyright  2012+, You
 // ==/UserScript==
 
@@ -54,6 +55,7 @@
     "HD Streams"
   ];
 
+  var openedPopups = [];  
 
   function sliceFirst(array, number){
     var result = [];
@@ -78,7 +80,7 @@
 
   function getAllHosts(){
     function getAllStartingWithId(id){
-       return document.querySelectorAll('*[id^="' + id + '"]');
+       return document.querySelectorAll('a[id^="' + id + '"]');
     }
 
     return getAllStartingWithId("part");
@@ -174,27 +176,19 @@
       markAsChecked(array[i]);
   }
 
-  function getURLFromHost(el){
-    var from = el.getAttribute("onclick").indexOf("'") + 1;  
-    var to = el.getAttribute("onclick").substring(from).indexOf("'");
-    var url = el.getAttribute("onclick").substring(from, from+to);
-    return url;
-  }
-
-  function getAllURLsFromHosts(hosts){
-    var result = [];
-    for(i=0; i < hosts.length; i++){
-      result.push(getURLFromHost(hosts[i]));
-    }
-    return result;
-  }
-
   function openInPopups(hosts){
     for(i=0; i < hosts.length; i++){
-      window.open(decodeURIComponent(getURLFromHost(hosts[i]).replace(/\+/g, '%20')),'popup'+i,'width=600,height=600,top=0,left=' + i * 200);
+      openedPopups.push(window.open(decodeURIComponent(hosts[i].getAttribute("url").replace(/\+/g, '%20')),new Date().valueOf(),'width=600,height=600,top=0,left=' + i * 200));
+      sortedHostList = sortedHostList.without(hosts[i]);
     }
     markAllAsChecked(hosts);
     // window.open(decodeURIComponent(url.replace(/\+/g, '%20')),'open','width=200,height=60,menubar=no,status=no,location=no,toolbar=no,scrollbars=yes,resizable=yes');
+  }
+
+  function closeAllPopups(){
+    for(i = 0; i < openedPopups.length; i++){
+      openedPopups[i].close();
+    }
   }
 
   function insertOpenBar(){
@@ -203,8 +197,9 @@
       '<input id="mySearchBar" type="text"></input>' + 
       '<input type="button" id="myButton1" value="1" />' + 
       '<input type="button" id="myButton3" value="3" />' + 
-      '<input type="button" id="myButton5" value="5" />'
-    document.querySelector('*[class^="src_main"]').parentNode.insertBefore(bar, document.querySelector('*[class^="src_main"]'));
+      '<input type="button" id="myButton5" value="5" />' + 
+      '<input type="button" id="myButtonClose" value="X" />'
+    document.querySelector('div[class^="src_main"]').parentNode.insertBefore(bar, document.querySelector('div[class^="src_main"]'));
     
     document.getElementById("myButton1").addEventListener('click', function(){
       showPopUpsForHostName(document.getElementById("mySearchBar").value, 1);
@@ -216,6 +211,10 @@
 
     document.getElementById("myButton5").addEventListener('click', function(){
       showPopUpsForHostName(document.getElementById("mySearchBar").value, 5);
+    }, true);
+
+    document.getElementById("myButtonClose").addEventListener('click', function(){
+      closeAllPopups();
     }, true);
 
     document.getElementById("mySearchBar").addEventListener('keydown', function(e){
@@ -235,7 +234,7 @@
         toPopUp.push(sortedHostList.shift());
     }
 
-    if(toPopUp.length > 0)
+    if(filter(toPopUp, function(el){ return el != undefined; }).length > 0)
       openInPopups(toPopUp);
   }
 
@@ -258,7 +257,26 @@
     return allSorted;
   }
 
+  function adjustAllOnClicks(){
+    function getURLFromHost(el){
+      var from = el.getAttribute("onclick").indexOf("'") + 1;  
+      var to = el.getAttribute("onclick").substring(from).indexOf("'");
+      var url = el.getAttribute("onclick").substring(from, from+to);
+      return url;
+    }
+
+    var allHosts = getAllHosts();
+    for(i = 0; i < allHosts.length; i++) {
+      allHosts[i].setAttribute("url", getURLFromHost(allHosts[i]));
+      allHosts[i].removeAttribute("onclick");
+      allHosts[i].addEventListener('click', function(){
+      openInPopups([this]);
+    }, true);
+    }
+  }
+
   var sortedHostList = sortByQuality(getAllHosts());
   colorHosts();
+  adjustAllOnClicks();
   insertOpenBar();
 })();

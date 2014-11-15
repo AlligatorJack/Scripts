@@ -11,60 +11,141 @@
 // @match      watchseries.lt/open/cale/*
 // @match      boerse.bz/out/*
 // @match      played.to/*
+// @match      nosvideo.com/*
+// @match      movreel.com/*
+// @match      www.firedrive.com/*
+// @run-at document-end
 // @copyright  2012+, You
 // ==/UserScript==
 
 (function(){
     var host  = window.location.host;
-    var bodyString = document.getElementsByTagName("body")[0].innerHTML
+    var bodyString = document.getElementsByTagName("body")[0].innerHTML;
     var removedList = [
       "Removed for copyright infringement"  
     ];
     
-    if(host == "movpod.in" || host == "daclips.in"){   
-       setTimeout(
-          function() 
-          {
-            $('#btn_download').click();
-          }, 5000);
-    }
-    else if(host == "vidbull.com"){
-       setTimeout(
-          function() 
-          {
-            $('#btn_download').click();
-          }, 3000);
+    if(host == "nosvideo.com"){
+      var f = function(){
+        if(isAlreadySkipped()){
+          document.getElementById('btn').disabled = false;
+          document.getElementById('btn').click();
+        }
+      }
+
+      var isAlreadySkipped = function(){
+        return $('#btn') === undefined || $('#btn').length === 0;
+      }
+
+      tryUntil(f, isAlreadySkipped, 7000, 1000, 6);
+    } 
+    else if(host == "vidbull.com" || 
+            host == "movreel.com" || 
+            host == "movpod.in" || 
+            host == "daclips.in"){
+
+      var beginTimeOut = 0;
+
+      if(host == "movpod.in" || host == "daclips.in")
+        beginTimeOut = 5000;
+      else if(host == "vidbull.com" || host == "movreel.com")
+        beginTimeOut = 3000;
+
+      var f = function(){
+        $('#btn_download').click();
+      }
+
+      var isAlreadySkipped = function(){
+        return $('#btn_download') === undefined || $('#btn_download').length === 0;
+      }
+
+      tryUntil(f, isAlreadySkipped, beginTimeOut, 1000, 6);
     }
     else if(host == "filenuke.com"){
+      var beginTimeOut = 0;
+
+      var f = function(){
         $('[name="method_free"]').click()
-        var elemString = document.getElementsByClassName("cont_block")[0].innerHTML;
+        var elemString = $(".cont_block")[0].innerHTML;
         var deathMessages = [
           "File Not Found",
           "The file you were looking for could not be found, sorry for any inconvenience"
         ];
         checkIfDeadAndClose(elemString, deathMessages);
+      }
+
+      var isAlreadySkipped = function(){
+        return $('[name="method_free"]') === undefined || $('[name="method_free"]').length === 0;
+      }
+
+      tryUntil(f, isAlreadySkipped, 0, 1000, 6);
     }
     else if(host == "gorillavid.in" || host == "watchseries.lt"){
-        if(document.getElementById('btn_download')){
-           document.getElementById('btn_download').disabled = false;
-           document.getElementById('btn_download').click();
+      var f = function(){
+        if($('#btn_download') !== undefined || $('#btn_download').length !== 0){
+          $('#btn_download')[0].removeAttribute("disabled");
+          $('#btn_download').click();
         }
-        if(document.getElementById('popup2-middle') && document.getElementById('popup2-middle').getElementsByTagName("a") && document.getElementById('popup2-middle').getElementsByTagName("a")[0].attributes.href.value)
-            self.location.href = document.getElementById('popup2-middle').getElementsByTagName("a")[0].attributes.href.value
+        if($('#popup2-middle') && $('#popup2-middle a') && $('#popup2-middle a')[0].attributes.href.value)
+          self.location.href = $('#popup2-middle a')[0].attributes.href.value
+      }
+      
+      var isAlreadySkipped = function(){
+        return $('#btn_download') === undefined || $('#btn_download').length === 0;
+      }
+
+      tryUntil(f, isAlreadySkipped, 100, 1000, 6);
+    }
+    else if(host == "www.firedrive.com"){
+      var f = function(){
+        $("#prepare_continue_btn").click();
+        loadplayer();
+        checkIfDeadAndClose($('#player p').text(), "Error loading player: No playable sources found");
+      }
+      var isAlreadySkipped = function(){
+        return ($("#prepare_continue_btn") === undefined || $("#prepare_continue_btn").length === 0) && ;
+      }
+      tryUntil(f, isAlreadySkipped, 100, 1000, 6);
     }
     else if(host == "boerse.bz"){ // Skip Boerse.bz "Klicke auf den externen Link"
-        var header = document.getElementById('wrapper').firstElementChild;
-        if (header == document.getElementsByTagName('header')[0])
-          self.location.href = header.getElementsByTagName('a')[0].attributes.href.value;
+      var header = $('#wrapper').firstElementChild;
+      if (header == $('header')[0])
+        self.location.href = header.getElementsByTagName('a')[0].attributes.href.value;
     }
     else if(host == "played.to"){
-        var elementToCheck = document.getElementsByClassName("err")[0];
+      var f = function(){
+        var elemString = $("err")[0].innerHTML;
         var deathMessage = "Removed for copyright infringement";
-        if(elementToCheck != null)
-          checkIfDeadAndClose(elementToCheck.innerHTML, deathMessage);
+        checkIfDeadAndClose(elemString, deathMessage);
+      }
+      var isAlreadySkipped = function(){
+        return $("err")[0] === undefined || $("err")[0].length === 0;
+      }
+      tryUntil(f, isAlreadySkipped, 100, 1000, 6);
     }
     
-        
+
+    function tryUntil(f, isAlreadySkipped, beginTimeOut, thenTimeOut, retryTimes){
+      setTimeout(
+        function(){
+          var counter = 0;
+          function tryAgain(){
+            setTimeout(
+              function(){
+                f();
+                counter++;
+                if(!isAlreadySkipped() && counter < retryTimes)
+                  tryAgain();
+              }, thenTimeOut
+            );
+          }
+
+          f();
+          if(retryTimes != 0 && !isAlreadySkipped())
+            tryAgain();
+        }, beginTimeOut
+      );
+    }
 
     function checkIfDeadAndClose(elString, deathMessages){
       var msgs = [];
@@ -73,7 +154,7 @@
       else
         msgs.push(deathMessages);
 
-      if(containsAny(elString, msgs)){
+      if(elString !=== undefined && elString != "" && containsAny(elString, msgs)){
           colorAllRed();
           setTimeout(
               function(){
@@ -99,7 +180,7 @@
     function colorAllRed(){
         var array = document.getElementsByTagName("*");
         for(i=0; i < array.length; i++){
-          if(array[i] != null)
+          if(array[i] !== null)
             array[i].style.backgroundColor = "red";
         }
     }
