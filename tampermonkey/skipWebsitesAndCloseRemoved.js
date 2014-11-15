@@ -31,11 +31,11 @@
           document.getElementById('btn').disabled = false;
           document.getElementById('btn').click();
         }
-      }
+      };
 
       var isAlreadySkipped = function(){
         return $('#btn') === undefined || $('#btn').length === 0;
-      }
+      };
 
       tryUntil(f, isAlreadySkipped, 7000, 1000, 6);
     } 
@@ -53,11 +53,11 @@
 
       var f = function(){
         $('#btn_download').click();
-      }
+      };
 
       var isAlreadySkipped = function(){
         return $('#btn_download') === undefined || $('#btn_download').length === 0;
-      }
+      };
 
       tryUntil(f, isAlreadySkipped, beginTimeOut, 1000, 6);
     }
@@ -72,11 +72,11 @@
           "The file you were looking for could not be found, sorry for any inconvenience"
         ];
         checkIfDeadAndClose(elemString, deathMessages);
-      }
+      };
 
       var isAlreadySkipped = function(){
         return $('[name="method_free"]') === undefined || $('[name="method_free"]').length === 0;
-      }
+      };
 
       tryUntil(f, isAlreadySkipped, 0, 1000, 6);
     }
@@ -88,11 +88,11 @@
         }
         if($('#popup2-middle') && $('#popup2-middle a') && $('#popup2-middle a')[0].attributes.href.value)
           self.location.href = $('#popup2-middle a')[0].attributes.href.value
-      }
+      };
       
       var isAlreadySkipped = function(){
         return $('#btn_download') === undefined || $('#btn_download').length === 0;
-      }
+      };
 
       tryUntil(f, isAlreadySkipped, 100, 1000, 6);
     }
@@ -101,10 +101,10 @@
         $("#prepare_continue_btn").click();
         loadplayer();
         checkIfDeadAndClose($('#player p').text(), "Error loading player: No playable sources found");
-      }
+      };
       var isAlreadySkipped = function(){
-        return ($("#prepare_continue_btn") === undefined || $("#prepare_continue_btn").length === 0) && ;
-      }
+        return $("#prepare_continue_btn") === undefined || $("#prepare_continue_btn").length === 0;
+      };
       tryUntil(f, isAlreadySkipped, 100, 1000, 6);
     }
     else if(host == "boerse.bz"){ // Skip Boerse.bz "Klicke auf den externen Link"
@@ -117,10 +117,10 @@
         var elemString = $(".err")[0].innerHTML;
         var deathMessage = "Removed for copyright infringement";
         checkIfDeadAndClose(elemString, deathMessage);
-      }
+      };
       var isAlreadySkipped = function(){
         return $("err")[0] === undefined || $("err")[0].length === 0;
-      }
+      };
       tryUntil(f, isAlreadySkipped, 100, 1000, 6);
     }
     
@@ -141,7 +141,7 @@
           }
 
           f();
-          if(retryTimes != 0 && !isAlreadySkipped())
+          if(retryTimes !== 0 && !isAlreadySkipped())
             tryAgain();
         }, beginTimeOut
       );
@@ -154,7 +154,7 @@
       else
         msgs.push(deathMessages);
 
-      if(elString !=== undefined && elString != "" && containsAny(elString, msgs)){
+      if(elString !== undefined && elString !== "" && containsAny(elString, msgs)){
           colorAllRed();
           setTimeout(
               function(){
