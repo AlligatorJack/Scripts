@@ -114,7 +114,7 @@
     }
     else if(host == "played.to"){
       var f = function(){
-        var elemString = $("err")[0].innerHTML;
+        var elemString = $(".err")[0].innerHTML;
         var deathMessage = "Removed for copyright infringement";
         checkIfDeadAndClose(elemString, deathMessage);
       }
