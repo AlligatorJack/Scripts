@@ -48,11 +48,13 @@
 
       if(host == "movpod.in" || host == "daclips.in")
         beginTimeOut = 5000;
-      else if(host == "vidbull.com" || host == "movreel.com")
+      else if(host == "vidbull.com" || host == "movreel.com") 
         beginTimeOut = 3000;
 
       var f = function(){
         $('#btn_download').click();
+        checkIfDeadAndClose($('#content').innerHTML, "Datei nicht gefunden");
+        checkIfDeadAndClose($('#container').innerHTML, "Datei nicht gefunden");
       };
 
       var isAlreadySkipped = function(){

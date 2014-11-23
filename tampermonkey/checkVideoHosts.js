@@ -12,7 +12,6 @@
 
   var goodHosts = [
     "filenuke", 
-    "played.to", 
     "vidbull",
     "sharerepo",
     "gorillavid...",
@@ -26,6 +25,7 @@
 
   var okHosts = [
     "nowvideo.eu",
+    "played.to", 
     "flashx.tv", 
     "hostingbulk", 
     "movreel", 
